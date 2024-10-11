@@ -13,6 +13,17 @@ function Form(props) {
   }
 
   function submitForm() {
+    const letters = "abcdefghijklmnopqrstuvwxyz";
+    const id =
+      "" +
+      letters[Math.floor(Math.random() * letters.length)] +
+      letters[Math.floor(Math.random() * letters.length)] +
+      letters[Math.floor(Math.random() * letters.length)] +
+      Math.floor(Math.random() * 10) +
+      Math.floor(Math.random() * 10) +
+      Math.floor(Math.random() * 10);
+    console.log(id)
+    person.id = id
     props.handleSubmit(person);
     setPerson({ name: "", job: "" });
   }

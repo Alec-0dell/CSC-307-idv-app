@@ -113,19 +113,21 @@ app.get("/users/:id", (req, res) => {
 app.post("/users", (req, res) => {
   const userToAdd = req.body;
   addUser(userToAdd);
-  res.send();
+  console.log("POST")
+  console.log(userToAdd)
+  res.status(201).send(userToAdd);
 });
 
 app.delete("/users/:id", (req, res) => {
   const id = req.params["id"];
   let result = deleteUserById(id);
-  if (result) {
+  if (!result) {
     res.status(404).send("Resource not found.");
   } else {
-    res.end(result);
+    res.status(204).send();
   }
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+  console.log(`IDV App listening at http://localhost:${port}`);
 });

@@ -9,32 +9,33 @@ function MyApp() {
     fetchUsers()
       .then((res) => res.json())
       .then((json) => setCharacters(json["users_list"]))
-      .catch((error) => { console.log(error); });
-  }, [] );
-
-  function removeOneCharacter(index) {
-    const updated = characters.filter((character, i) => {
-      return i !== index;
-    });
-    setCharacters(updated);
-  }
-
-  function updateList(person) {
-    setCharacters([...characters, person]);
-  }
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   function fetchUsers() {
     const promise = fetch("http://localhost:8000/users");
     return promise;
   }
 
-  function updateList(person) { 
+  function updateList(person) {
     postUser(person)
+      .then((response) => {
+        if (response.status === 201) {
+          return response.json();
+        } else {
+          throw new Error(
+            `Failed to create user: Received status code ${response.status}`
+          );
+        }
+      })
+      .then((json) => console.log(JSON.stringify(json)))
       .then(() => setCharacters([...characters, person]))
       .catch((error) => {
         console.log(error);
-      })
-}
+      });
+  }
 
   function postUser(person) {
     const promise = fetch("Http://localhost:8000/users", {
@@ -44,7 +45,36 @@ function MyApp() {
       },
       body: JSON.stringify(person),
     });
+    return promise;
+  }
 
+  function removeOneCharacter(index) {
+    deleteUser(index)
+      .then((response) => {
+        if (response.status !== 204) {
+          throw new Error(
+            `Failed to create user: Received status code ${response.status}`
+          );
+        }
+      })
+      .then(() => {
+        const updated = characters.filter((character, i) => {
+          return i !== index;
+        });
+        setCharacters(updated);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  function deleteUser(index) {
+    const promise = fetch(
+      "Http://localhost:8000/users/" + characters[index].id,
+      {
+        method: "DELETE",
+      }
+    );
     return promise;
   }
 
