@@ -30,8 +30,10 @@ function MyApp() {
           );
         }
       })
-      .then((json) => console.log(JSON.stringify(json)))
-      .then(() => setCharacters([...characters, person]))
+      .then((json) => {
+        console.log(JSON.stringify(json));
+        setCharacters([...characters, json]);
+      })
       .catch((error) => {
         console.log(error);
       });
@@ -70,7 +72,7 @@ function MyApp() {
 
   function deleteUser(index) {
     const promise = fetch(
-      "Http://localhost:8000/users/" + characters[index].id,
+      "Http://localhost:8000/users/" + characters[index]._id,
       {
         method: "DELETE",
       }
